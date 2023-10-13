@@ -6,7 +6,6 @@ const { a } = van.tags
 
 console.log("routes.js")
 
-
 //
 // page state
 //
@@ -115,11 +114,9 @@ function navLink(props, ...children) {
   console.log("navLink", props)
   const { target, name, ...otherProps } = props;
 
-  const ariaCurrent = isCurrentPage(name)
-
   return a(
     {
-      "aria-current": ariaCurrent,
+      "aria-current": isCurrentPage(name),
       href: url(name, props.params),
       target: target || "_self",
       role: "link",
