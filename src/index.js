@@ -1,19 +1,14 @@
 import navbar from "./app/navbar";
-import intro from "./app/intro";
-import context from "./context.js";
+import van from "vanjs-core";
 
-// fake url when starting
-history.pushState("", "", "/");
-const Navbar = navbar(context);
-const Intro = intro(context);
-const { van } = context;
 const { div } = van.tags;
+
+const Navbar = navbar();
 
 const App = () =>
   div(
     Navbar(""),
-    div({ id: "layout", class: context.classes.layout }, Intro())
+    div({ id: "layout", class: "layout" })
   );
 
-// van.add(document.body, App());
 document.body.replaceChildren(App());
