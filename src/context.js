@@ -1,5 +1,4 @@
 import "./index.css";
-import van from "vanjs-core";
 import createVanSpa from "./spa";
 
 console.log('context.js')

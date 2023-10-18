@@ -5,13 +5,11 @@ const { a } = van.tags;
 
 console.log('spa.js')
 
-const currentPage = van.state("")
-
-const isCurrentPage = (pageName) => van.derive(() => (currentPage.val === pageName))
-
 function createVanSpa(routes, defaultNavState) {
 
-    // const currentPage = van.state("")
+    const currentPage = van.state("")
+
+    const isCurrentPage = (pageName) => van.derive(() => currentPage.val === pageName)
 
     async function changePage(moduleName, { route, params }) {
         console.log("VanSpa.changePage to " + route.name + ' cur: ' + currentPage.val)
@@ -80,15 +78,11 @@ function createVanSpa(routes, defaultNavState) {
     function navLink(props, ...children) {
         const { target, name, ...otherProps } = props;
 
-        console.log("VanSpa.navLink", props, currentPage.val, isCurrentPage(name).val)
-
-        const ariaCurrent = van.derive(() => (isCurrentPage(name).val ? "page" : ""))
-
-        van.derive(() => console.log('VanSpa.navLink | ' + name + ' | is cur: ' + isCurrentPage(name).val + ' | aria ' + ariaCurrent.val + ' |'))
+        console.log("VanSpa.navLink", props)
 
         return a(
             {
-                "aria-current": ariaCurrent.val,
+                "aria-current": van.derive(() => (isCurrentPage(name).val ? "page" : "")),
                 href: generateUrl(name, props.params),
                 target: target || "_self",
                 role: "link",
@@ -115,89 +109,3 @@ function createVanSpa(routes, defaultNavState) {
 }
 
 export default createVanSpa
-// export { changePage }
-
-// class VanSpa {
-
-//     constructor(routes, defaultNavState) {
-//         this.routes = routes;
-//         this.router = new UniversalRouter(routes);
-//         this.generateUrl = generateUrls(router)
-//         this.currentPage = van.state("")
-
-//         this.defaultNavState = typeof defaultNavState === 'undefined' ? null : defaultNavState
-//         this.navState = van.state(this.defaultNavState)
-
-//         window.onpopstate = (event) => {
-//             console.log("VanSpa.popstate:", event.target.location.pathname)
-//             this.router.resolve(event.target.location.pathname).then((page) => {
-//                 layout.replaceChildren(page());
-//             });
-//         };
-
-//         window.onload = (event) => {
-//             console.log("window.onload", event.target.location.pathname, window.history.state)
-//             this.setNavState(window.history.state)
-//             this.router.resolve(event.target.location.pathname).then((page) => {
-//                 layout.replaceChildren(page());
-//             });
-//         }
-        
-//     }
-
-//     getNavState() {
-//         return this.navState.val
-//     }
-
-//     setNavState(newState) {
-//         if(newState === null) {
-//             this.navState.val = this.defaultNavState
-//         }else{
-//             this.navState.val = newState
-//         }
-//     }
-
-//     async changePage(moduleName, { route, params }) {
-//         console.log("VanSpa.changePage", route)
-//         this.currentPage.val = route.name
-//         if (route.title) window.document.title = route.title
-//         const { default: page } = await import(`./pages/${moduleName}.js`);
-//         return page(params);
-//     }
-
-//     navigate(pathname) {
-//         console.log("VanSpa.navigate", pathname)
-//         history.pushState(getNavState(), "", pathname);
-//         this.router.resolve(pathname).then((page) => {
-//             layout.replaceChildren(page());
-//         });
-//     } 
-      
-//     handleNav(event) {
-//         event.preventDefault();
-//         console.log("VanSpa.handleNav", event.target.href)
-//         this.navigate(event.target.pathname)
-//     }
-
-//     isCurrentPage(pageName) {
-//         van.derive(() => currentPage.val === pageName)
-//     }
-
-//     navLink(props, ...children) {
-//         console.log("VanSpa.navLink", props)
-//         const { target, name, ...otherProps } = props;
-
-//         return a(
-//             {
-//                 "aria-current": this.isCurrentPage(name) ? "page" : "",
-//                 href: url(name, props.params),
-//                 target: target || "_self",
-//                 role: "link",
-//                 class: otherProps.class || "linkNav",
-//                 onclick: handleNav,
-//                 ...otherProps,
-//             },
-//             children
-//         );
-//     };
-// }
