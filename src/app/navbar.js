@@ -1,6 +1,8 @@
-import { navLink } from "./routes.js";
+import context from "../context"
 import van from "vanjs-core";
 import "../index.css";
+
+const { navLink } = context
 
 console.log("navbar.js")
 

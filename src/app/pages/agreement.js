@@ -1,6 +1,8 @@
 import van from "vanjs-core";
 import context from "../../context"
-import { navLink } from "../routes.js";
+
+const { navLink, navState } = context
+
 
 const { label, input, span, br, section } = van.tags
 
@@ -12,8 +14,8 @@ const agreementPage = () => {
     type: "checkbox",
     id: "agreement",
     name: "agreement",
-    checked: context.val.agreement,
-    onchange: (e) => (context.val.agreement = e.target.checked),
+    checked: navState.val.agreement,
+    onchange: (e) => (navState.val.agreement = e.target.checked),
   }
 
   return () =>

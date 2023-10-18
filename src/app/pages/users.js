@@ -1,5 +1,7 @@
 import van from "vanjs-core";
-import { navLink } from "../routes.js";
+import context from "../../context"
+
+const { navLink } = context
 
 const { section, div, br, h1, ul, li } = van.tags
 

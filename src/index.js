@@ -1,6 +1,5 @@
 import navbar from "./app/navbar";
 import van from "vanjs-core";
-
 const { div } = van.tags;
 
 const Navbar = navbar();
