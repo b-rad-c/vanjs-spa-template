@@ -169,17 +169,17 @@ function createVanSpa(routes, defaultNavState) {
 
     // nav link component
     function navLink(props, ...children) {
-        const { target, name, ...otherProps } = props;
+        const { target, name, params, query, ...otherProps } = props;
 
         console.log("VanSpa.navLink", props)
 
         return a(
             {
                 "aria-current": van.derive(() => (isCurrentPage(name).val ? "page" : "")),
-                href: router.formatUrl(name, props.params, props.query),
+                href: router.formatUrl(name, params, query),
                 target: target || "_self",
                 role: "link",
-                class: otherProps.class || "linkNav",
+                class: otherProps.class || 'router-link',
                 onclick: handleNav,
                 ...otherProps,
             },

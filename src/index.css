@@ -25,7 +25,7 @@ h1 {
   padding: 10px;
 }
 
-.linkNav {
+.navbar-link {
   text-decoration: none;
   background-color: #fff;
   color: midnightblue;
@@ -33,15 +33,15 @@ h1 {
   border-radius: 5px;
 }
 
-.linkNav:hover {
+.navbar-link:hover {
   background-color: bisque;
 }
 
-.linkNav:active {
+.navbar-link:active {
   font-weight: bold;
 }
 
-.linkNav[aria-current="page"] {
+.navbar-link[aria-current="page"] {
   background-color: bisque;
 }
 

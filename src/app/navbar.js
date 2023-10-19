@@ -16,10 +16,10 @@ const navbar = () => {
     div(
       nav(
         { class: "nav" },
-        navLink({name: "home"}, "Home"),
-        navLink({name: "users"}, "Users"),
-        navLink({name: "context"}, "Context"),
-        navLink({name: "agreement"}, "Agreement")
+        navLink({name: "home", class: 'navbar-link'}, "Home"),
+        navLink({name: "users", class: 'navbar-link'}, "Users"),
+        navLink({name: "context", class: 'navbar-link'}, "Context"),
+        navLink({name: "agreement", class: 'navbar-link'}, "Agreement")
       ),
       hr()
     )
