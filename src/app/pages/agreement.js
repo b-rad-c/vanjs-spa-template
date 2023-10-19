@@ -3,7 +3,6 @@ import context from "../../context"
 
 const { navLink, navState } = context
 
-
 const { label, input, span, br, section } = van.tags
 
 const agreementPage = () => {
