@@ -48,20 +48,14 @@ const parseUrl = (url) => {
 
 const stripPrefix = (url ,prefix) => url.replace(new RegExp('^' + prefix), '');
 
-// The actual Router as the default export of the module
 class Router {
 	constructor() {
 		this.routes = [];
 		this.prefix = '';
 	}
 
-	// Adds a route with an _optional_ name, a path and a handler function
 	add(name, path, handler) {
-		if (arguments.length == 2) {
-			this.add('', ...arguments);
-		} else {
-			this.routes.push(createRoute(name, path, handler));
-		}
+		this.routes.push(createRoute(name, path, handler));
 		return this;
 	}
 
@@ -70,20 +64,22 @@ class Router {
 		return this;
 	}
 
-	dispatch(url, isBack) {
+	dispatch(url) {
+        console.log('Router.dispatching', url)
 		const {path, queryString} = parseUrl(stripPrefix(url, this.prefix));
+        console.log(path, queryString)
 		const query = getQueryParams(queryString || '');
 		const {route, params} = findRouteParams(this.routes, path);
 
 		if (route) {
-			route.handler({params, query, isBack});
+			route.handler({params, query});
 			return route;
 		}
 
 		return false;
 	}
 
-	getCurrentRoute(url) {
+	getRoute(url) {
 		const {path, queryString} = parseUrl(stripPrefix(url, this.prefix));
 		const rp = findRouteParams(this.routes, path);
 		return rp && rp.route;
@@ -121,7 +117,7 @@ function createVanSpa(routes, defaultNavState) {
 
     routes.forEach(route => {
         router.add(route.name, route.path, function({params, query}) {
-            console.log("VanSpa.router.action to " + route.name + ' cur: ' + currentPage.val)
+            console.log("VanSpa.router.action to " + route.name)
 
             currentPage.val = route.name
             if (route.title) window.document.title = route.title
@@ -148,27 +144,27 @@ function createVanSpa(routes, defaultNavState) {
 
     // window navigation events
     window.onpopstate = (event) => {
-        console.log("VanSpa.popstate:", event.target.location.pathname)
-        router.dispatch(event.target.location.pathname)
+        console.log("VanSpa.popstate:", event.target.location.href)
+        router.dispatch(event.target.location.href)
     };
 
     window.onload = (event) => {
-        console.log("window.onload", event.target.location.pathname, window.history.state)
+        console.log("window.onload", event.target.location.href, window.history.state)
         setNavState(window.history.state)
-        router.dispatch(event.target.location.pathname)
+        router.dispatch(event.target.location.href)
     }
 
     // navigation functions
-    const navigate = (pathname) => {
-        console.log("VanSpa.navigate", pathname)
-        history.pushState(getNavState(), "", pathname);
-        router.dispatch(pathname)
+    const navigate = (url) => {
+        console.log("VanSpa.navigate", url)
+        history.pushState(getNavState(), "", url);
+        router.dispatch(url)
     } 
       
     const handleNav = (event) => {
         event.preventDefault();
         console.log("VanSpa.handleNav", event.target.href)
-        navigate(event.target.pathname)
+        navigate(event.target.href)
     }
 
     // nav link component

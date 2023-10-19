@@ -21,7 +21,7 @@ const userProfile = (userData) => {
 }
 
 const userPage = (params) => {
-  console.log("function usersPage");
+  console.log("function usersPage", params);
 
   const userId = params.userId
   const userData = userDB[userId]
