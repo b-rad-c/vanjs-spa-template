@@ -1,8 +1,114 @@
 import van from "vanjs-core";
-import Router from 'minimal-router'
 const { a } = van.tags;
 
 console.log('spa.js')
+
+const parametersPattern = /(:[^\/]+)/g;
+
+function getMatchedParams(route, path) {
+	const matches = path.match(route.matcher);
+
+	if (!matches) {
+		return false;
+	}
+
+	return route.params.reduce((acc, param, idx) => {
+		acc[param] = decodeURIComponent(matches[idx + 1]);
+		return acc;
+	}, {});
+};
+
+function getQueryParams(query) {
+	return query.split('&')
+		.filter(p => p.length)
+		.reduce((acc, part) => {
+			const [key, value] = part.split('=');
+			acc[decodeURIComponent(key)] = decodeURIComponent(value);
+			return acc;
+		}, {});
+};
+
+function createRoute(name, path, handler) {
+	const matcher = new RegExp(path.replace(parametersPattern, '([^\/]+)') + '$');
+	const params = (path.match(parametersPattern) || []).map(x => x.substring(1));
+
+	return {name, path, handler, matcher, params};
+};
+
+const findRouteParams = (routes, path) => {
+	let params;
+	const route = routes.find(r => params = getMatchedParams(r, path));
+	return {route, params};
+};
+
+const parseUrl = (url) => {
+	const [path, queryString] = url.split('?');
+	return {path, queryString};
+};
+
+const stripPrefix = (url ,prefix) => url.replace(new RegExp('^' + prefix), '');
+
+// The actual Router as the default export of the module
+class Router {
+	constructor() {
+		this.routes = [];
+		this.prefix = '';
+	}
+
+	// Adds a route with an _optional_ name, a path and a handler function
+	add(name, path, handler) {
+		if (arguments.length == 2) {
+			this.add('', ...arguments);
+		} else {
+			this.routes.push(createRoute(name, path, handler));
+		}
+		return this;
+	}
+
+	setPrefix(prefix) {
+		this.prefix = prefix;
+		return this;
+	}
+
+	dispatch(url, isBack) {
+		const {path, queryString} = parseUrl(stripPrefix(url, this.prefix));
+		const query = getQueryParams(queryString || '');
+		const {route, params} = findRouteParams(this.routes, path);
+
+		if (route) {
+			route.handler({params, query, isBack});
+			return route;
+		}
+
+		return false;
+	}
+
+	getCurrentRoute(url) {
+		const {path, queryString} = parseUrl(stripPrefix(url, this.prefix));
+		const rp = findRouteParams(this.routes, path);
+		return rp && rp.route;
+	}
+
+	formatUrl(routeName, params = {}, query = {}) {
+		const route = this.routes.find(r => r.name === routeName);
+
+		if (!route) {
+			return '';
+		}
+
+		const queryString = Object.keys(query)
+				  .map(k => [k, query[k]])
+				  .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+				  .join('&');
+
+		const path = this.prefix + route.path.replace(parametersPattern, function(match) {
+			return params[match.substring(1)];
+		});
+
+		return queryString.length ? path + '?' + queryString : path;
+	}
+};
+
 
 function createVanSpa(routes, defaultNavState) {
 

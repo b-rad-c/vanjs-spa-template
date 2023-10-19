@@ -14,7 +14,6 @@
     "vite-bundle-visualizer": "^0.7.0"
   },
   "dependencies": {
-    "minimal-router": "^1.0.6",
     "vanjs-core": "^1.2.1"
   }
 }
