@@ -1,10 +1,10 @@
 # Van.js SPA Template
 
-A [VanJS](https://vanjs.org/) powered demo SPA, 6.21 kB bundled and gzipped!
+A [VanJS](https://vanjs.org/) powered demo SPA, 3.99kB bundled and gzipped!
 
 ## Features
 
-- Navigation powered by [Universal Router](https://github.com/kriasoft/universal-router) with async loading
+- Navigation powered by [minimal router](https://github.com/jmhdez/minimal-router) with async loading
 - router integrates with browser history
 - state object integrates with browser history
 - user profile page with user id parsed from url params

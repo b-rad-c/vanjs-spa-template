@@ -1,6 +1,5 @@
 import van from "vanjs-core";
-import UniversalRouter from "universal-router";
-import generateUrls from "universal-router/generateUrls"
+import Router from 'minimal-router'
 const { a } = van.tags;
 
 console.log('spa.js')
@@ -11,23 +10,21 @@ function createVanSpa(routes, defaultNavState) {
 
     const isCurrentPage = (pageName) => van.derive(() => currentPage.val === pageName)
 
-    async function changePage(moduleName, { route, params }) {
-        console.log("VanSpa.changePage to " + route.name + ' cur: ' + currentPage.val)
-        currentPage.val = route.name
-        if (route.title) window.document.title = route.title
-        const { default: page } = await import(`./app/pages/${moduleName}.js`);
-        console.log("changed page to " + currentPage.val)
-        return page(params);
-    }
-
-    const updatedRoutes = routes.map(route => {
-        if (!route.hasOwnProperty('action')) route.action = async (ctx) => changePage(route.name, ctx)
-        return route
-    })
-
     // router
-    const router = new UniversalRouter(updatedRoutes);
-    const generateUrl = generateUrls(router)
+    const router = new Router();
+
+    routes.forEach(route => {
+        router.add(route.name, route.path, function({params, query}) {
+            console.log("VanSpa.router.action to " + route.name + ' cur: ' + currentPage.val)
+
+            currentPage.val = route.name
+            if (route.title) window.document.title = route.title
+
+            route.callable()
+                .then((page) => layout.replaceChildren(page.default(params, query)()))
+                .catch((error) => console.error('error changing page', error))
+        });
+    })
 
     // nav state
     const _defaultNavState = typeof defaultNavState === 'undefined' ? null : defaultNavState
@@ -46,26 +43,20 @@ function createVanSpa(routes, defaultNavState) {
     // window navigation events
     window.onpopstate = (event) => {
         console.log("VanSpa.popstate:", event.target.location.pathname)
-        router.resolve(event.target.location.pathname).then((page) => {
-            layout.replaceChildren(page());
-        });
+        router.dispatch(event.target.location.pathname)
     };
 
     window.onload = (event) => {
         console.log("window.onload", event.target.location.pathname, window.history.state)
         setNavState(window.history.state)
-        router.resolve(event.target.location.pathname).then((page) => {
-            layout.replaceChildren(page());
-        });
+        router.dispatch(event.target.location.pathname)
     }
 
     // navigation functions
     const navigate = (pathname) => {
         console.log("VanSpa.navigate", pathname)
         history.pushState(getNavState(), "", pathname);
-        router.resolve(pathname).then((page) => {
-            layout.replaceChildren(page());
-        });
+        router.dispatch(pathname)
     } 
       
     const handleNav = (event) => {
@@ -83,7 +74,7 @@ function createVanSpa(routes, defaultNavState) {
         return a(
             {
                 "aria-current": van.derive(() => (isCurrentPage(name).val ? "page" : "")),
-                href: generateUrl(name, props.params),
+                href: router.formatUrl(name, props.params, props.query),
                 target: target || "_self",
                 role: "link",
                 class: otherProps.class || "linkNav",
@@ -97,7 +88,6 @@ function createVanSpa(routes, defaultNavState) {
     return {
         currentPage,
         router,
-        generateUrl,
         navState,
         getNavState,
         setNavState,
