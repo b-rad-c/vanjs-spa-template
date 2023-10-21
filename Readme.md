@@ -8,7 +8,8 @@ A [VanJS](https://vanjs.org/) powered demo SPA, 3.38kB bundled and gzipped!
 - router integrates with browser history
 - state object integrates with browser history
 - user profile page with user id parsed from url params
-- navLink component for generating links based off of named routes, with params and active class css styling
+- user list sorted with url query params
+- navLink component for generating links based off of named routes, with url and query params and active class css styling
 - handler for user id not found
 - not found page
 
