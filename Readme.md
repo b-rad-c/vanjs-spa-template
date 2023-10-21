@@ -1,6 +1,6 @@
 # Van.js SPA Template
 
-A [VanJS](https://vanjs.org/) powered demo SPA, 3.37kB bundled and gzipped!
+A [VanJS](https://vanjs.org/) powered demo SPA, 3.38kB bundled and gzipped!
 
 ## Features
 
@@ -12,11 +12,17 @@ A [VanJS](https://vanjs.org/) powered demo SPA, 3.37kB bundled and gzipped!
 - handler for user id not found
 - not found page
 
-## Setup
+## Instructions
 
+**install**
 ```bash
 npm install
 npm run build
+```
+
+**build visualizer**
+```bash
+npm run bundle-visualizer
 ```
 
 ## Credit
