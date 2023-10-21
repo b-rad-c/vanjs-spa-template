@@ -18,6 +18,11 @@ A [VanJS](https://vanjs.org/) powered demo SPA, 3.38kB bundled and gzipped!
 **install**
 ```bash
 npm install
+npm run dev
+```
+
+**build**
+```bash
 npm run build
 ```
 
