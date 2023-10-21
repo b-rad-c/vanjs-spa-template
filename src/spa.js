@@ -106,7 +106,7 @@ class Router {
 };
 
 
-function createVanSpa(routes, defaultNavState) {
+function createVanSpa(routerElement, routes, defaultNavState) {
 
     const currentPage = van.state("")
 
@@ -123,7 +123,7 @@ function createVanSpa(routes, defaultNavState) {
             if (route.title) window.document.title = route.title
 
             route.callable()
-                .then((page) => layout.replaceChildren(page.default(params, query)()))
+                .then((page) => routerElement.replaceChildren(page.default(params, query)()))
                 .catch((error) => console.error('error changing page', error))
         });
     })
@@ -188,6 +188,7 @@ function createVanSpa(routes, defaultNavState) {
     };
 
     return {
+        routerElement,
         currentPage,
         router,
         navState,

@@ -1,13 +1,16 @@
 import navbar from "./app/navbar";
 import van from "vanjs-core";
+import context from "./context"
 const { div } = van.tags;
+
+const { routerElement } = context
 
 const Navbar = navbar();
 
 const App = () =>
   div(
-    Navbar(""),
-    div({ id: "layout", class: "layout" })
+    Navbar(),
+    routerElement
   );
 
 document.body.replaceChildren(App());
