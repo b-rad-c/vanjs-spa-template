@@ -9,7 +9,7 @@ const homePage = () => {
 
   return () =>
     section(
-      h1("Welcome to this demo app. It is powered by VanJS, routed by Universal-Router."),
+      h1("Welcome to this SPA demo using VanJS!"),
       br(),
       div(
         { style: "text-align:center;" },
