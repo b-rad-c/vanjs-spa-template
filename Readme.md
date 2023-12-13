@@ -1,3 +1,5 @@
+### 🚨 This is **deprecated**, see this [example](https://github.com/vanjs-org/van/tree/main/addons/van_cone/examples/spa-app) which uses a reusable VanJS SPA framework created from this repository. 🚨 
+
 # Van.js SPA Template
 
 A [VanJS](https://vanjs.org/) powered demo SPA, 3.38kB bundled and gzipped!
